@@ -14,13 +14,12 @@ import java.util.Arrays;
  *              - 2 种写法
  *              - 二分插入排序
  *              - 希尔插入排序
- *      - [ ] 希尔排序
- *      - [ ] 快速排序
+ *      - [?] 快速排序
  *      - [ ] 归并排序
  *      - [ ] 堆排序
  *
  * 创建日期：2018.03.01
- * 最后更新：
+ * 最后更新：2018.03.04
  *
  * @author Suvan
  */
@@ -47,8 +46,14 @@ public class SortAlgorithm {
         //sa.binaryInsertSort(arr);
 
         //希尔排序
-        sa.shellInsertSort(arr);
+        //sa.shellInsertSort(arr);
+
+        //快速排序
+        //sa.quickSort(arr, 0, arr.length - 1);
+        sa.quickSortOptimization(arr, 0, arr.length - 1);
+        System.out.println(Arrays.toString(arr));
     }
+
 
     /*
      * ***********************************************
@@ -404,7 +409,7 @@ public class SortAlgorithm {
         }
 
         //narrow down for-each, gap ----> / 3
-        for(; gap > 0; gap /= 3) {
+        for (; gap > 0; gap /= 3) {
             for (i = gap; i < len; i ++) {
                 temp = arr[i];
 
@@ -417,5 +422,109 @@ public class SortAlgorithm {
         }
 
         System.out.println(Arrays.toString(arr));
+    }
+
+    /*
+     * ***********************************************
+     * 快速排序 method
+     * ***********************************************
+     */
+
+    /**
+     * 快速排序
+     *      - 最好的情况 O(n log n)，最坏的情况 O(n^2)
+     *      - 主要是分治法，一个序列分成两个序列
+     *          1. 找基准
+     *          2. 分区操作（小的放置基准前，大的放置基准后）
+     *          3. 递归把小于基准值得 ‘子数列’ 和大于基准值元素的 ‘子数列’ 排序
+     *
+     * @param arr 整型数组
+     * @param head 头指针（左）
+     * @param tail 尾指针（右）
+     */
+    private void quickSort(int[] arr, int head, int tail) {
+        if (head >= tail || arr == null || arr.length <= 1) {
+            return;
+        }
+
+        int i = head, j = tail, pivot = arr[(head + tail) / 2];
+        while (i <= j) {
+            while (arr[i] < pivot) {
+                i ++;
+            }
+
+            while (arr[j] > pivot) {
+                j --;
+            }
+
+            if (i < j) {
+                this.swap(arr, i, j);
+
+                i ++;
+                j --;
+            } else if (i == j) {
+                i ++;
+            }
+        }
+
+        this.quickSort(arr, 0, j);
+        this.quickSort(arr, i, tail);
+    }
+
+    /**
+     * 快排优化
+     *   - 原地（in-place）分区的版本
+     *   - 平均可以达到 O(\log n) 空间的使用复杂度
+     *   - 递归到最后，数列长度为 1 | 0，表示已经排序完毕
+     *
+     * @param arr 振
+     * @param head 头指针（左）
+     * @param tail 尾指针（右）
+     */
+    private void quickSortOptimization(int[] arr, int head, int tail) {
+        if (head < tail) {
+            int pivot = (head + tail) / 2 + 1;
+            int pivotIndex = this.partition(arr, head, tail, pivot);
+            this.quickSort(arr, head, pivotIndex - 1);
+            this.quickSort(arr, pivotIndex + 1, tail);
+        }
+    }
+
+    /**
+     * 原地分区算法
+     *      - 用于快速排序优化
+     *      - 它分区了标示为"左边（left）"和"右边（right）"的序列部分，
+     *         借由移动小于a[pivotIndex]的所有元素到子序列的开头，留下所有大于或等于的元素接在他们后面。
+     *      - 思路
+     *          1. 储存中间值，然后中间值交换到末尾
+     *          2. 定义临时指针（初始值为头指针）， 遍历 head -> right - 1，若小于中间值的数，交换到头指针，且自增
+     *          3. 遍历结束，将会小于中间值的在数组前端（无序），大的接在后面（无序），最后是中间值
+     *          4. 临时指针（无序的第一个大的），和末尾值交换，得到：临时指针-中间值
+     *          5. 返回中间值的指针
+     *      - 【注意】一个元素在到达它的最后位置前，可能会被交换很多次
+     *
+     * @param arr 数组
+     * @param left 左指针
+     * @param right 右指针
+     * @param pivotIndex 中指针（中间值）
+     * @return int 临时指针
+     */
+    private int partition(int[] arr, int left, int right, int pivotIndex) {
+        int pivotValue = arr[pivotIndex];
+
+        //pivot move to last
+        this.swap(arr, pivotIndex, right);
+
+        int tmpIndex = left;
+        for (int i = left; i < right - 1; i ++) {
+            if (arr[i] <= pivotValue) {
+                this.swap(arr, tmpIndex, i);
+                tmpIndex ++;
+            }
+        }
+
+        //pivot move to it last
+        this.swap(arr, right, tmpIndex);
+        return tmpIndex;
     }
 }
