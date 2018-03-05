@@ -227,10 +227,12 @@ public class SortAlgorithm {
         }
 
         int min, minIndex;
-        for (int i = 0, len = arr.length; i < len - 1; i ++) {
+        int i, j;
+        int len = arr.length;
+        for (i = 0; i < len - 1; i ++) {
             min = arr[i];
-             minIndex = i;
-            for (int j = i + 1; j < len; j ++) {
+            minIndex = i;
+            for (j = i + 1; j < len; j ++) {
                 if (arr[j] < min) {
                     min = arr[j];
                     minIndex = j;
@@ -316,37 +318,37 @@ public class SortAlgorithm {
         }
 
         //method 1
-        //int tmp, j;
-        //for (int i = 1, len = arr.length; i < len; i ++) {
-        //    tmp = arr[i];
-        //
-        //    j = i - 1;
-        //    while (j >= 0 && arr[j] > tmp) {
-        //        arr[j + 1] = arr[j];
-        //        j --;
-        //    }
-        //
-        //    arr[j + 1] = tmp;
-        //}
+        int tmp, j;
+        for (int i = 1, len = arr.length; i < len; i ++) {
+            tmp = arr[i];
+
+            j = i - 1;
+            while (j >= 0 && arr[j] > tmp) {
+                arr[j + 1] = arr[j];
+                j --;
+            }
+
+            arr[j + 1] = tmp;
+        }
 
         //method 2
-        for (int i = 1, len = arr.length; i < len; i ++) {
-            int tmp = arr[i];
-            int pointer = i - 1;
-
-            for (int j = i - 1; j >= 0; j --) {
-                if (arr[j] > tmp) {
-                    arr[j + 1] = arr[j];
-                    pointer --;
-                } else {
-                    break;
-                }
-            }
-
-            if (pointer < i - 1) {
-                arr[pointer + 1] = tmp;
-            }
-        }
+        //for (int i = 1, len = arr.length; i < len; i ++) {
+        //    int tmp = arr[i];
+        //    int pointer = i - 1;
+        //
+        //    for (int j = i - 1; j >= 0; j --) {
+        //        if (arr[j] > tmp) {
+        //            arr[j + 1] = arr[j];
+        //            pointer --;
+        //        } else {
+        //            break;
+        //        }
+        //    }
+        //
+        //    if (pointer < i - 1) {
+        //        arr[pointer + 1] = tmp;
+        //    }
+        //}
 
         System.out.println(Arrays.toString(arr));
     }
@@ -370,7 +372,7 @@ public class SortAlgorithm {
         for (int i = 1, len = arr.length; i < len; i ++) {
             tmp = arr[i];
 
-            //find
+            //find mid index
             start = 0;
             end = i - 1;
             while (start <= end) {
@@ -476,7 +478,7 @@ public class SortAlgorithm {
             }
         }
 
-        this.quickSort(arr, 0, j);
+        this.quickSort(arr, head, j);
         this.quickSort(arr, i, tail);
     }
 
@@ -492,10 +494,10 @@ public class SortAlgorithm {
      */
     private void quickSortOptimization(int[] arr, int head, int tail) {
         if (head < tail) {
-            int pivot = (head + tail) / 2 + 1;
-            int pivotIndex = this.partition(arr, head, tail, pivot);
-            this.quickSort(arr, head, pivotIndex - 1);
-            this.quickSort(arr, pivotIndex + 1, tail);
+            int pivotIndex = (head + tail) / 2 + 1;
+            int resultPivotIndex = this.partition(arr, head, tail, pivotIndex);
+            this.quickSort(arr, head, resultPivotIndex - 1);
+            this.quickSort(arr, resultPivotIndex + 1, tail);
         }
     }
 
@@ -560,7 +562,7 @@ public class SortAlgorithm {
             return;
         }
 
-        int len = end - start, mid = (len >> 2) + start;
+        int len = end - start, mid = (len >> 1) + start;
         int head1 = start, tail1 = mid;
         int head2 = mid + 1, tail2 = end;
         this.mergeSortByRecursive(arr, result, head1, tail1);
