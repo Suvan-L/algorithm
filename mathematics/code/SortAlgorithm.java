@@ -15,11 +15,11 @@ import java.util.Arrays;
  *              - 二分插入排序
  *              - 希尔插入排序
  *      - [?] 快速排序
- *      - [ ] 归并排序
- *      - [ ] 堆排序
+ *      - [?] 归并排序
+ *      - [?] 堆排序
  *
  * 创建日期：2018.03.01
- * 最后更新：2018.03.04
+ * 最后更新：2018.03.05
  *
  * @author Suvan
  */
@@ -50,8 +50,17 @@ public class SortAlgorithm {
 
         //快速排序
         //sa.quickSort(arr, 0, arr.length - 1);
-        sa.quickSortOptimization(arr, 0, arr.length - 1);
-        System.out.println(Arrays.toString(arr));
+        //sa.quickSortOptimization(arr, 0, arr.length - 1);
+        //System.out.println(Arrays.toString(arr));
+
+        //归并排序
+        //int [] result = new int[arr.length];
+        //sa.mergeSortByRecursive(arr, result, 0, arr.length - 1);
+        //sa.mergeSortByForeach(arr);
+        //System.out.println(Arrays.toString(arr));
+
+        //堆排序
+        sa.heapSort(arr);
     }
 
 
@@ -526,5 +535,165 @@ public class SortAlgorithm {
         //pivot move to it last
         this.swap(arr, right, tmpIndex);
         return tmpIndex;
+    }
+
+    /*
+     * ***********************************************
+     * 归并排序
+     *      - 归并操作（将两个已排序的序列合成一个序列的操作）
+     *      - 迭代法
+     *      - 递归法
+     * ***********************************************
+     */
+
+    /**
+     * 归并排序（递归版）
+     *      - 效率为 O(n log n)
+     *
+     * @param arr 整型数组
+     * @param result 结果数组（新申请空间, 数组长度与 arr 相等）
+     * @param start 前指针
+     * @param end 后指针
+     */
+    private void mergeSortByRecursive(int[] arr, int[] result, int start, int end) {
+        if (start >= end) {
+            return;
+        }
+
+        int len = end - start, mid = (len >> 2) + start;
+        int head1 = start, tail1 = mid;
+        int head2 = mid + 1, tail2 = end;
+        this.mergeSortByRecursive(arr, result, head1, tail1);
+        this.mergeSortByRecursive(arr, result, head2, tail2);
+
+        int k = start;
+        while (head1 <= tail1 && head2 <= tail2) {
+            result[k++] = arr[head1] < arr[head2] ? arr[head1++] : arr[head2++];
+        }
+
+        while (head1 <= tail1) {
+            result[k++] = arr[head1++];
+        }
+
+        while (head2 <= tail2) {
+            result[k++] = arr[head2++];
+        }
+
+        //filling
+        for (k = start; k <= end; k++) {
+            arr[k] = result[k];
+        }
+    }
+
+
+    /**
+     * 归并排序（迭代法）
+     *
+     * @param arr 整型数组
+     */
+    private void mergeSortByForeach(int[] arr) {
+        if (arr == null || arr.length == 0 || arr.length == 1) {
+            return;
+        }
+
+        int len = arr.length;
+        int [] result = new int[len];
+        int block, start;
+        int low, mid, high;
+        int head1, tail1;
+        int head2, tail2;
+        int [] tmp;
+
+        for (block = 1; block < len; block *= 2) {
+            for (start = 0; start < len; start += 2 * block) {
+                low = start;
+                mid = (start + block) < len ? (start + block) : len;
+                high = (start + 2 * block) < len ? (start + 2 * block) : len;
+
+                head1 = low; tail1 = mid;
+                head2 = mid; tail2 = high;
+
+                //two block to merge sort
+                while (head1 < tail1 && head2 < tail2) {
+                    result[low ++] = arr[head1] < arr[head2] ? arr[head1 ++] : arr[head2 ++];
+                }
+
+                while (head1 < tail1) {
+                    result[low ++] = arr[head1 ++];
+                }
+
+                while (head2 < tail2) {
+                    result[low ++] = arr[head2 ++];
+                }
+            }
+
+            tmp = result;
+            result = arr;
+            arr = tmp;
+        }
+
+        result = arr;
+    }
+
+    /*
+     * ***********************************************
+     * 堆排序
+     *      - 利用堆这种数据结构设计的一种排序算法
+     *      - 堆积是一种近似 '完全二叉树' 的结构
+     *          - 同时满足堆积的性质： 子结点的键值 | 索引总是小于（or 大于） 它的父节点
+     * ***********************************************
+     */
+
+    /**
+     * 堆排序
+     *      - 平均时间复杂度：O(n log n)
+     *      - 步骤
+     *          1. 数组堆化
+     *          2. 对堆化数据排序
+     *
+     * @param arr 整型数组
+     */
+    private void heapSort(int [] arr) {
+        //array -> heap
+        int len = arr.length - 1;
+        int beginIndex = (len - 1) / 2;
+        for (int i = beginIndex; i >= 0; i --) {
+            this.maxHeap(arr, i, len);
+        }
+
+        //sort -> heap type 'array'
+        for (int i = len; i > 0; i --) {
+            this.swap(arr, 0, i);
+            this.maxHeap(arr, 0, i - 1);
+        }
+
+        System.out.println(Arrays.toString(arr));
+    }
+
+    /**
+     * 最大堆递归
+     *      - 调整索引为 index 处的数据，使其符合堆的特性
+     *
+     * @param arr 整型数组
+     * @param index 需要堆化处理数据的索引
+     * @param len 未排序的堆（数组）的长度
+     */
+    private void maxHeap(int [] arr, int index, int len) {
+        int leftIndex = (index * 2) + 1;
+        int rightIndex = leftIndex + 1;
+        int childMaxIndex = leftIndex;
+
+        if (leftIndex > len) {
+            return;
+        }
+
+        if (rightIndex <= len && arr[leftIndex] < arr[rightIndex]) {
+            childMaxIndex = rightIndex;
+        }
+
+        if (arr[childMaxIndex] > arr[index]) {
+            this.swap(arr, childMaxIndex, index);
+            this.maxHeap(arr, childMaxIndex, len);
+        }
     }
 }
