@@ -1,4 +1,4 @@
-package jdk.lang;
+package mathematics.code;
 
 /**
  * µİÔöÇóºÍ

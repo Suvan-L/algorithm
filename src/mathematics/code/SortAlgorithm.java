@@ -1,4 +1,4 @@
-package sort;
+package mathematics.code;
 
 import java.util.Arrays;
 
@@ -278,10 +278,10 @@ public class SortAlgorithm {
             }
 
             if (minIndex != firstPointer) {
-                swap(arr, firstPointer, minIndex);
+                this.swap(arr, firstPointer, minIndex);
             }
             if (maxIndex != lastPointer) {
-                swap(arr, lastPointer, maxIndex);
+                this.swap(arr, lastPointer, maxIndex);
             }
 
             firstPointer ++;

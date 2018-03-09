@@ -1,4 +1,4 @@
-package jdk.concurrent;
+package life.code;
 
 /**
  * ¡¾±à³ÌÌâ¡¿

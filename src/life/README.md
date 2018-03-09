@@ -1,6 +1,6 @@
 # 生活问题
 
-### 1.  [母牛生产问题](./code/ComputeCow.java)
+### 1.  [母牛生产问题](code/ComputeCow.java)
 ```
 农场一头小母牛，
 每年生头小母牛，
@@ -8,7 +8,7 @@
 二十年有多少头牛？
 ```
 
-### 2.  [喝酒问题](./code/ComputeDrink.java)
+### 2.  [喝酒问题](code/ComputeDrink.java)
 ```
 身上只有 10 块钱，一共可以喝多少瓶酒?
 - 2 块钱一瓶酒

@@ -1,4 +1,4 @@
-package jdk.util;
+package mathematics.code;
 
 import java.util.Scanner;
 

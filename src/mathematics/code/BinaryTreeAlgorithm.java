@@ -1,4 +1,4 @@
-package tree;
+package mathematics.code;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
